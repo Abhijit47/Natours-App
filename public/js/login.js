@@ -5,7 +5,7 @@ export const login = async (email, password) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'https://helpful-eel-galoshes.cyclic.app/api/v1/users/login',
+      url: 'https://natoursapp.cyclic.app/api/v1/users/login',
       data: {
         email,
         password,
