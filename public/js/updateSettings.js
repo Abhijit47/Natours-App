@@ -6,8 +6,8 @@ export const updateSettings = async (data, type) => {
   try {
     const url =
       type === 'password'
-        ? '/api/v1/users/updateMyPassword'
-        : '/api/v1/users/updateMe';
+        ? 'https://helpful-eel-galoshes.cyclic.app/api/v1/users/updateMyPassword'
+        : 'https://helpful-eel-galoshes.cyclic.app/api/v1/users/updateMe';
 
     const res = await axios({
       method: 'PATCH',
