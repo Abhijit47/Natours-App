@@ -9,6 +9,7 @@ const AppError = require('../utils/appError');
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   // 1) Get the currently booked tour
   const tour = await Tour.findById(req.params.tourId);
+  // console.log(tour);
 
   // 2) Create checkout session
   const session = await stripe.checkout.sessions.create({
@@ -29,13 +30,14 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
           currency: 'inr',
           product_data: {
             name: `${tour.name} Tour`,
-            images: [
-              `${req.protocol}://${req.get('host')}/img/tours/${
-                tour.imageCover
-              }`,
-            ],
+            // images: [
+            //   `${req.protocol}://${req.get('host')}/img/tours/${
+            //     tour.imageCover
+            //   }`,
+            // ],
+            // images: [tour.imageCover],
+            images: [`https://www.natours.dev/img/tours/${tour.imageCover}`],
             description: tour.summary,
-            // images: [`https://www.natours.dev/img/tours/${tour.imageCover}`],
           },
         },
         quantity: 1,
@@ -77,7 +79,7 @@ const createBookingCheckout = async (session) => {
   await Booking.create({ tour, user, price });
 };
 
-exports.webhookCheckout = catchAsync(async (req, res, next) => {
+exports.webhookCheckout = (req, res, next) => {
   const signature = req.headers['stripe-signature'];
 
   let event;
@@ -91,12 +93,11 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
     return res.status(400).send(`Webhook error: ${err.message}`);
   }
 
-  if (event.type === 'checkout.session.completed') {
+  if (event.type === 'checkout.session.completed')
     createBookingCheckout(event.data.object);
 
-    res.status(200).json({ received: true });
-  }
-});
+  res.status(200).json({ received: true });
+};
 
 exports.createBooking = factory.createOne(Booking);
 exports.getBooking = factory.getOne(Booking);
