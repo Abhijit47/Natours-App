@@ -6,7 +6,7 @@ export const signUp = async (name, email, password, passwordConfirm) => {
   try {
     const res = await axios({
       method: 'POST',
-      url: 'https://natoursapp.onrender.com/api/v1/users/signup',
+      url: 'api/v1/users/signup',
       data: {
         name,
         email,
